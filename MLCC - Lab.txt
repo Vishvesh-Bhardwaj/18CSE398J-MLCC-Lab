@@ -1,0 +1,436 @@
+------------------------------------------------------------
+1 - Linear Regression 
+======================
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_excel('Salary_Data.xlsx')
+dataset.head()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .2, random_state = 0)
+
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+y_pred = regressor.predict(X_test)
+
+plt.scatter(X_train, y_train, color = 'g')
+plt.plot(X_train, regressor.predict(X_train), color = 'blue')
+plt.title('Salary vs Experience (Training set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(y_test,y_pred)
+print("Mean Squared Error of the model : ", mse)
+
+rmse = np.sqrt(mean_squared_error(y_test,y_pred))
+print("Root Mean Squared Error of the model : ", rmse)
+
+from sklearn.metrics import mean_absolute_error
+mae = mean_absolute_error(y_test,y_pred)
+print("Mean Absolute Error of the model : ", mae)
+
+-------------------------------------------------------------------------------------------
+2 - Logistic Regression
+=======================
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+diabetes = pd.read_excel('diabetes.xlsx')
+diabetes.head()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(diabetes.drop('Outcome',axis=1),diabetes['Outcome'], test_size=0.30,random_state=101)
+
+from sklearn.linear_model import LogisticRegression
+
+logmodel = LogisticRegression()
+logmodel.fit(X_train,y_train)
+
+predictions = logmodel.predict(X_test)
+
+from sklearn.metrics import accuracy_score
+score=accuracy_score(y_test,predictions)
+score
+
+---------------------------------------------------------------------------------------------------------------------
+3 - KNN
+=========
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+diabetes = pd.read_excel('diabetes.xlsx')
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(diabetes.drop('Outcome',axis=1), diabetes['Outcome'], test_size=0.30,random_state=101) 
+
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train,y_train)
+pred = knn.predict(X_test)
+
+from sklearn.metrics import confusion_matrix
+print(confusion_matrix(y_test,pred))
+                                                    
+from sklearn.metrics import accuracy_score
+score=accuracy_score(y_test,pred)
+print(f'Accuracy: {round(score*100,2)}%')                                                   
+
+import matplotlib.pyplot as plt
+import numpy as np
+plt.plot(k,accuracy)
+plt.title('Accuracy vs. K Value')
+plt.xlabel('K Value')
+plt.ylabel('Accuracy %')
+
+------------------------------------------------------------------------------------------------------------
+4 - SVM
+========
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+diabetes = pd.read_excel('diabetes.xlsx')
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(diabetes.drop('Outcome',axis=1), diabetes['Outcome'], test_size=0.30,  random_state=101) 
+
+from sklearn.svm import SVC
+
+svc_classifier=SVC(kernel='linear')
+svc_classifier.fit(X_train,y_train)
+
+predictions=svc_classifier.predict(X_test)
+
+from sklearn.metrics import confusion_matrix
+
+print(confusion_matrix(y_test,predictions))
+
+from sklearn.metrics import accuracy_score
+
+print("Accuracy:",accuracy_score(y_test, predictions))
+                                                   
+------------------------------------------------------------------------------------------------------------------------------
+
+5 - Decision Tree
+==================
+
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+import pandas as pd
+
+df = pd.read_csv('InformationGainData.csv')
+df.drop(['RID'],axis=1,inplace=True)
+print(df)
+
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+df['age']=le.fit_transform(df['age'])
+df['income']=le.fit_transform(df['income'])
+df['student']=le.fit_transform(df['student'])
+df['credit_rating']=le.fit_transform(df['credit_rating'])
+df['Class:buys computer']=le.fit_transform(df['Class:buys computer'])
+df
+
+X = df.drop(['Class:buys computer'],axis=1)
+y = df['Class:buys computer']
+
+X_train=X
+y_train=y
+feature_names=["age",	"income",	"student",	"credit_rating"]
+target_names=["no","yes"]
+#,	"Class:buys computer"]
+clf_tree = DecisionTreeClassifier(criterion='entropy', random_state=1)
+clf_tree.fit(X_train, y_train)
+#
+# Plot the decision tree
+#
+fig, ax = plt.subplots(figsize=(10, 10))
+tree.plot_tree(clf_tree, feature_names=feature_names, class_names=target_names, fontsize=10)
+plt.show()
+
+#age:youth, income:low, student:yes, credit_rating:fair
+#Expected output: Yes
+#test data
+
+type(X_train)
+
+X_test=[[2,1,1,1]]
+y_test = [1]
+y_pred = clf_tree.predict(X_test)
+
+
+from sklearn.metrics import accuracy_score
+
+
+print ("Accuracy : ", accuracy_score(y_test,y_pred)*100)
+
+------------------------------------------------------------------------------------------------
+
+6 - Naive Bayes
+=================
+
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+import pandas as pd
+
+df = pd.read_csv('InformationGainData.csv')
+df.drop(['RID'],axis=1,inplace=True)
+print(df)
+
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+df['age']=le.fit_transform(df['age'])
+df['income']=le.fit_transform(df['income'])
+df['student']=le.fit_transform(df['student'])
+df['credit_rating']=le.fit_transform(df['credit_rating'])
+df['Class:buys computer']=le.fit_transform(df['Class:buys computer'])
+df
+
+X = df.drop(['Class:buys computer'],axis=1)
+y = df['Class:buys computer']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+X_test
+
+X_test_GV=[[1,2,0,1]]
+
+y_pred  =  classifier.predict(X_test_GV)
+
+print(y_pred)
+
+y_pred  =  classifier.predict(X_test)
+
+from sklearn.metrics import accuracy_score
+ac = accuracy_score(y_test,y_pred)
+
+--------------------------------------------------------------------------------------------------------------
+
+7 - K Means Clustering
+=======================
+
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+import pandas as pd
+
+features = pd.read_csv('customers_product.csv')
+
+features.shape
+
+kmeans = KMeans(
+    n_clusters=3,
+    n_init=10,
+    max_iter=300,
+    random_state=42
+)
+
+kmeans.fit(features)
+
+kmeans.cluster_centers_
+
+kmeans.n_iter_
+
+features.shape
+
+-----------------------------------------------------------------------------------------
+
+8 - K medoids
+==============
+
+pip install scikit-learn-extra
+
+from sklearn_extra.cluster import KMedoids
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from sklearn_extra.cluster import KMedoids
+from sklearn.datasets import make_blobs
+
+# Generate sample data
+centers = [[1, 1], [-1, -1], [1, -1]]
+X, labels_true = make_blobs(
+    n_samples=750, centers=centers, cluster_std=0.4, random_state=0
+)
+
+#print(X)
+# Compute Kmedoids clustering
+cobj = KMedoids(n_clusters=3).fit(X)
+labels = cobj.labels_
+#print(labels)
+print(cobj.cluster_centers_)
+print(cobj.cluster_centers_[0,:])
+
+plt.scatter(X[:,0],X[:,1])
+plt.scatter(cobj.cluster_centers_[0,:1],cobj.cluster_centers_[0,1:2],color='r')
+plt.scatter(cobj.cluster_centers_[1,:1],cobj.cluster_centers_[1,1:2],color='r')
+plt.scatter(cobj.cluster_centers_[2,:1],cobj.cluster_centers_[2,1:2],color='r')
+
+import pandas as pd
+
+X=pd.read_csv('kmedoid_data.csv')
+X=X.values
+
+#print(X)
+# Compute Kmedoids clustering
+cobj = KMedoids(n_clusters=2).fit(X[:,1:])
+labels = cobj.labels_
+#print(labels)
+print(cobj.cluster_centers_)
+#print(cobj.cluster_centers_[0,:])
+
+plt.scatter(X[:,1],X[:,2])
+plt.scatter(cobj.cluster_centers_[0,:1],cobj.cluster_centers_[0,1:2],color='r')
+plt.scatter(cobj.cluster_centers_[1,:1],cobj.cluster_centers_[1,1:2],color='r')
+#plt.scatter(cobj.cluster_centers_[2,:1],cobj.cluster_centers_[2,1:2],color='r')
+
+------------------------------------------------------------------------------------------------------------------
+
+9 - PCA
+=========
+
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = load_iris()
+X, y = iris.data, iris.target
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Apply PCA to reduce the dimensionality of the data
+pca = PCA(n_components=2)
+X_train_pca = pca.fit_transform(X_train)
+X_test_pca = pca.transform(X_test)
+
+# Create a SVM classifier with a linear kernel and train on the original data
+svm_orig = SVC(kernel='linear', random_state=42)
+svm_orig.fit(X_train, y_train)
+
+# Evaluate the SVM classifier on the original data
+y_pred_orig = svm_orig.predict(X_test)
+print("Accuracy score on original data:", accuracy_score(y_test, y_pred_orig))
+
+# Create a SVM classifier with a linear kernel and train on the data after PCA
+svm_pca = SVC(kernel='linear', random_state=42)
+svm_pca.fit(X_train_pca, y_train)
+
+# Evaluate the SVM classifier on the data after PCA
+y_pred_pca = svm_pca.predict(X_test_pca)
+print("Accuracy score after PCA:", accuracy_score(y_test, y_pred_pca))
+
+
+-----------------------------------------------------------------------------------------------------------
+
+10 - CNN
+============
+
+import tensorflow as tf
+from keras.preprocessing.image import ImageDataGenerator
+
+import pandas as pd
+
+train_datagen = ImageDataGenerator(rescale = 1./255, shear_range = 0.2,zoom_range = 0.2, horizontal_flip = True)
+                                  
+                                  
+                                   
+
+training_set = train_datagen.flow_from_directory('/content/dog-cat-full-dataset/data/train',  target_size = (64, 64),batch_size = 32, class_mode = 'binary')
+                                               
+                                                
+                                                 
+
+
+test_datagen = ImageDataGenerator(rescale = 1./255)
+test_set = test_datagen.flow_from_directory('/content/dog-cat-full-dataset/data/test',   target_size = (64, 64),batch_size = 32,class_mode = 'binary')
+                                            
+                                            
+                                         
+
+cnn = tf.keras.models.Sequential()
+
+cnn.add(tf.keras.layers.Conv2D(filters=32, kernel_size=3, activation='relu',   input_shape=[64, 64, 3]))
+                             
+
+cnn.add(tf.keras.layers.MaxPool2D(pool_size=2, strides=2))
+
+cnn.add(tf.keras.layers.Conv2D(filters=32, kernel_size=3, activation='relu'))
+cnn.add(tf.keras.layers.MaxPool2D(pool_size=2, strides=2))
+
+cnn.add(tf.keras.layers.Flatten())
+
+cnn.add(tf.keras.layers.Dense(units=128, activation='relu'))
+
+cnn.add(tf.keras.layers.Dense(units=1, activation='sigmoid'))
+
+cnn.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+
+cnn.fit(x = training_set, validation_data = test_set, epochs = 2)
+
+cnn.summary()
+
+
+import numpy as np
+from keras.preprocessing import image
+
+test_image = tf.keras.utils.load_img('/content/GV_DeepLearning/Dataset/SingleImage/cat_or_dog_1.jpg',  target_size = (64, 64))
+                           
+#test_image = tf.keras.utils.load_img(test_image)
+test_image = np.expand_dims(test_image, axis = 0)
+result = cnn.predict(test_image)
+training_set.class_indices
+if result[0][0] == 1:
+  prediction = 'dog'
+else:
+  prediction = 'cat'
+
+print(prediction)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+                                                  
+
+
+
+
+
